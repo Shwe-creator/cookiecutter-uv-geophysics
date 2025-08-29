@@ -1,22 +1,31 @@
-import os
-import pathlib
+"""Generate API reference docs with mkdocstrings."""
+from pathlib import Path
+import mkdocs_gen_files
 
-DOCS_DIR = pathlib.Path("docs")
-REF_DIR = DOCS_DIR / "reference"
-SRC_DIR = pathlib.Path("src")
+# point to your source package
+SRC = Path("src")
+PACKAGE = "{{cookiecutter.project_slug.replace('-', '_')}}"
 
-def main():
-    print("🔧 Generating API reference docs...")
+nav = mkdocs_gen_files.Nav()
 
-    # Create reference directory if it doesn’t exist
-    REF_DIR.mkdir(parents=True, exist_ok=True)
+for path in sorted(SRC.rglob("*.py")):
+    module_path = path.relative_to(SRC).with_suffix("")
+    doc_path = Path("reference", path.relative_to(SRC)).with_suffix(".md")
+    full_doc_path = Path("docs", doc_path)
 
-    # Create an index page for reference
-    with open(REF_DIR / "index.md", "w") as f:
-        f.write("# Reference\n\n")
-        f.write("::: src\n")
+    parts = tuple(module_path.parts)
+    if parts[-1] == "__init__":
+        parts = parts[:-1]
+    if parts[-1].startswith("_"):
+        continue
 
-    print("✅ API reference docs generated at docs/reference/")
+    nav[parts] = doc_path.as_posix()
 
-if __name__ == "__main__":
-    main()
+    full_doc_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(full_doc_path, "w") as fd:
+        identifier = ".".join(parts)
+        fd.write(f"# `{identifier}`\n\n::: {identifier}\n")
+
+# write a nav index
+with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as nav_file:
+    nav_file.writelines(nav.build_literate_nav())
