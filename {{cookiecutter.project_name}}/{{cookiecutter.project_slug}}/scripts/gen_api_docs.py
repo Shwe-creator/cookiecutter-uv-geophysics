@@ -2,8 +2,10 @@
 from pathlib import Path
 import mkdocs_gen_files
 
-# point to your source package
-SRC = Path("src")
+# --- Always resolve relative to project root (where mkdocs.yml is) ---
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+SRC = PROJECT_ROOT / "src"
+DOCS = PROJECT_ROOT / "docs"
 PACKAGE = "{{cookiecutter.project_slug.replace('-', '_')}}"
 
 nav = mkdocs_gen_files.Nav()
@@ -11,7 +13,7 @@ nav = mkdocs_gen_files.Nav()
 for path in sorted(SRC.rglob("*.py")):
     module_path = path.relative_to(SRC).with_suffix("")
     doc_path = Path("reference", path.relative_to(SRC)).with_suffix(".md")
-    full_doc_path = Path("docs", doc_path)
+    full_doc_path = DOCS / doc_path
 
     parts = tuple(module_path.parts)
     if parts[-1] == "__init__":
@@ -26,6 +28,7 @@ for path in sorted(SRC.rglob("*.py")):
         identifier = ".".join(parts)
         fd.write(f"# `{identifier}`\n\n::: {identifier}\n")
 
-# write a nav index
+# --- Write nav index inside docs/reference ---
+(DOCS / "reference").mkdir(parents=True, exist_ok=True)
 with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as nav_file:
     nav_file.writelines(nav.build_literate_nav())
