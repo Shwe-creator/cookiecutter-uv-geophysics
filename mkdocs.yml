@@ -23,8 +23,17 @@ nav:
       - Devcontainer with VSCode: features/devcontainer.md
   - Tutorial: tutorial.md
   - Prompt Arguments: prompt_arguments.md
+  - Reference: reference/
 plugins:
   - search
+  - mkdocstrings:
+    handlers:
+      python:
+        options:
+          show_root_heading: true
+          show_source: true
+  - gen-files
+  - literate-nav
 extra_css:
   - stylesheets/extra.css
 theme:
@@ -62,3 +71,5 @@ markdown_extensions:
       permalink: true
   - pymdownx.arithmatex:
       generic: true
+hooks:
+  - scripts/gen_api_docs.py
