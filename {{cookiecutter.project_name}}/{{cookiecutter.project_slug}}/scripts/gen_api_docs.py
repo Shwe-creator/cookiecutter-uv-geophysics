@@ -18,7 +18,7 @@ for path in sorted(SRC.rglob("*.py")):
     parts = tuple(module_path.parts)
     if parts[-1] == "__init__":
         parts = parts[:-1]
-    if parts[-1].startswith("_"):
+    if not parts or parts[-1].startswith("_"):
         continue
 
     nav[parts] = doc_path.as_posix()
