@@ -34,6 +34,7 @@ plugins:
           show_source: true
   - gen-files
   - literate-nav
+  - section-index
 extra_css:
   - stylesheets/extra.css
 theme:
