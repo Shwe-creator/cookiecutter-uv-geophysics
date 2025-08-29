@@ -23,7 +23,7 @@ nav:
       - Devcontainer with VSCode: features/devcontainer.md
   - Tutorial: tutorial.md
   - Prompt Arguments: prompt_arguments.md
-  - Reference: reference/
+  - Reference: reference/index.md
 plugins:
   - search
   - mkdocstrings:
