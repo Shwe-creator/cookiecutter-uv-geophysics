@@ -73,6 +73,11 @@ publish: ## Publish a release to PyPI.
 .PHONY: build-and-publish
 build-and-publish: build publish ## Build and publish.
 
+.PHONY: gen-api-docs
+gen-api-docs: ## Generate API reference docs automatically
+	@echo "🚀 Generating API reference docs"
+	@uv run python src/{{cookiecutter.project_slug}}/scripts/gen_api_docs.py
+
 .PHONY: docs-test
 docs-test: ## Test if documentation can be built without warnings or errors
 	@uv run mkdocs build -s
