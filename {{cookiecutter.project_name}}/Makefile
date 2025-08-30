@@ -48,6 +48,10 @@ build-and-publish: build publish ## Build and publish.
 {%- endif%}
 
 {%- if cookiecutter.mkdocs == "y" %}
+SRC_DIR := src/{{ cookiecutter.project_slug }}
+.PHONY: show-src
+show-src:
+	@echo "SRC_DIR is $(SRC_DIR)"
 .PHONY: gen-api-docs
 gen-api-docs:
 	@if [ -f $(SRC_DIR)/scripts/gen_api_docs.py ]; then \
@@ -56,6 +60,7 @@ gen-api-docs:
 	else \
 		echo "⚠️ gen_api_docs.py not found in $(SRC_DIR)/scripts"; \
 	fi
+
 .PHONY: docs-test
 docs-test: ## Test if documentation can be built without warnings or errors
 	@uv run mkdocs build -s
