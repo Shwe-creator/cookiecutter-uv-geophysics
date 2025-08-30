@@ -48,7 +48,14 @@ build-and-publish: build publish ## Build and publish.
 {%- endif%}
 
 {%- if cookiecutter.mkdocs == "y" %}
-
+.PHONY: gen-api-docs
+gen-api-docs:
+	@if [ -f $(SRC_DIR)/scripts/gen_api_docs.py ]; then \
+		echo "🚀 Generating API reference docs"; \
+		uv run python $(SRC_DIR)/scripts/gen_api_docs.py; \
+	else \
+		echo "⚠️ gen_api_docs.py not found in $(SRC_DIR)/scripts"; \
+	fi
 .PHONY: docs-test
 docs-test: ## Test if documentation can be built without warnings or errors
 	@uv run mkdocs build -s
